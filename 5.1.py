@@ -9,7 +9,6 @@ class BaseContact:
       self.tel_private = tel_private
       self.email = email
       
-      self._str_length = 0
 
    @property
    def label_length(self):
@@ -25,31 +24,53 @@ class BaseContact:
 
 class BusinessContact(BaseContact):
    def __init__(self, position, company_name, tel_business, *args, **kwargs):
+      super().__init__(*args, **kwargs)
       self.position = position
       self.company_name = company_name
       self.tel_business = tel_business
-      super().__init__(*args, **kwargs)
 
    def contact(self):
       print(f'Wybieram numer {self.tel_business} i dzwonię do {self.first_name} {self.last_name}')
 
 
-peoples = []
-def create_fake_people():      
-   for i in range(5):
+def create_contacts(typ, count): 
+   if typ not in ['B','P' ]:
+      print('Nieobsługiwany typ wizytówki')
+      return     
+   peoples = []
+   for i in range(count):
       p = fake.name()
       p = p.split(' ')
+      if typ == 'B':
+         peoples.append(BaseContact(first_name=p[0], last_name=p[1], email=fake.email(), tel_private=fake.phone_number() ))
+      elif typ == 'P':
+         peoples.append(BusinessContact(
+            first_name=p[0],
+            last_name=p[1],  
+            tel_private=fake.phone_number(), 
+            email=fake.email(), 
+            tel_business=fake.phone_number(), 
+            company_name=fake.company(),
+            position='Manager'
+            ))
+   return peoples
 
-      peoples.append(BaseContact(p[0], p[1], 'Pracownik', fake.email() ))
 
 
-create_fake_people()
+error = create_contacts('', 2)
+bussines_cards = create_contacts('B', 5)
+base_cards = create_contacts('P', 4)
 
-for people in peoples:
+for people in bussines_cards:
    print(people)
-   print(people.str_length)
+   print(people.label_length)
+   people.contact()
+for people in base_cards:
+   print(people)
+   print(people.label_length)
+   people.contact()
 
 
-by_name = sorted(peoples, key=lambda p: p.first_name)
-by_last_name = sorted(peoples, key=lambda p: p.last_name)
-by_email = sorted(peoples, key=lambda p: p.email)
+# by_name = sorted(peoples, key=lambda p: p.first_name)
+# by_last_name = sorted(peoples, key=lambda p: p.last_name)
+# by_email = sorted(peoples, key=lambda p: p.email)
