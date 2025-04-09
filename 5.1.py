@@ -2,17 +2,17 @@ from faker import Faker
 
 fake = Faker('es_ES')
 
-class BaseCard:
-   def __init__(self, first_name, last_name, position, email):
+class BaseContact:
+   def __init__(self, first_name, last_name, email, tel_private):
       self.first_name = first_name
       self.last_name = last_name
-      self.position = position
+      self.tel_private = tel_private
       self.email = email
       
       self._str_length = 0
 
    @property
-   def str_length(self):
+   def label_length(self):
       first_length = len(self.first_name)
       last_length = len(self.last_name)
       return f'{first_length} {last_length}'
@@ -21,7 +21,18 @@ class BaseCard:
       return f"{self.first_name} {self.last_name} {self.email}"
 
    def contact(self):
-      print(f'Kontaktuje się z {self.first_name} {self.last_name} {self.position} {self.email}')
+      print(f'Wybieram numer {self.tel_private} i dzwonię do {self.first_name} {self.last_name}')
+
+class BusinessContact(BaseContact):
+   def __init__(self, position, company_name, tel_business, *args, **kwargs):
+      self.position = position
+      self.company_name = company_name
+      self.tel_business = tel_business
+      super().__init__(*args, **kwargs)
+
+   def contact(self):
+      print(f'Wybieram numer {self.tel_business} i dzwonię do {self.first_name} {self.last_name}')
+
 
 peoples = []
 def create_fake_people():      
@@ -29,7 +40,7 @@ def create_fake_people():
       p = fake.name()
       p = p.split(' ')
 
-      peoples.append(VisitCard(p[0], p[1], 'Pracownik', fake.email() ))
+      peoples.append(BaseContact(p[0], p[1], 'Pracownik', fake.email() ))
 
 
 create_fake_people()
