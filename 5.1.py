@@ -1,4 +1,16 @@
 from faker import Faker
+from datetime import datetime
+
+def fun_timer(func):
+   def wrapper(*args, **kwargs):
+      start = datetime.now()
+      result = func(*args, **kwargs)
+      end = datetime.now()
+      print(end - start)
+      return result
+   return wrapper
+
+
 
 fake = Faker('es_ES')
 
@@ -32,7 +44,7 @@ class BusinessContact(BaseContact):
    def contact(self):
       print(f'Wybieram numer {self.tel_business} i dzwonię do {self.first_name} {self.last_name}')
 
-
+@fun_timer
 def create_contacts(typ, count): 
    if typ not in ['B','P' ]:
       print('Nieobsługiwany typ wizytówki')
@@ -71,6 +83,10 @@ for people in base_cards:
    people.contact()
 
 
+create_contacts('P', 1000) 
+
+
 # by_name = sorted(peoples, key=lambda p: p.first_name)
 # by_last_name = sorted(peoples, key=lambda p: p.last_name)
 # by_email = sorted(peoples, key=lambda p: p.email)
+
