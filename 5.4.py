@@ -58,4 +58,15 @@ def generate_fake_serial(count):
 
 films_serials = films_serials + generate_fake_movie(5) + generate_fake_serial(5)
 
-print(films_serials)
+def get_movies(arr):
+    result = [item for item in arr if not isinstance(item, Serial)]
+    result = sorted(result, key=lambda film: film.title)
+    return result
+
+def get_serials(arr):
+    result = [item for item in arr if isinstance(item, Serial)]
+    result = sorted(result, key=lambda serial: serial.title)
+    return result
+
+for film in get_serials(films_serials):
+    print(film)
